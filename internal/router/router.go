@@ -16,6 +16,12 @@ func SetUpRouter(r *gin.Engine) {
 		vehicleGroup.GET("", api.ListVehicles)
 	}
 
+	// poi接口
+	poisGroup := r.Group("/pois")
+	{
+		poisGroup.GET("", api.ListPois)
+	}
+
 	// swagger接口
 	swaggerGroup := r.Group("/swagger")
 	{

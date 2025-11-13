@@ -20,9 +20,9 @@ func Success(c *gin.Context, data interface{}) {
 	})
 }
 
-func Error(c *gin.Context, msg string) {
+func Error(c *gin.Context, msg string, err error) {
 	c.JSON(http.StatusOK, Result{
 		Code:    2,
-		Message: msg,
+		Message: msg + "--->" + err.Error(),
 	})
 }

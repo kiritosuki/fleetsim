@@ -5,24 +5,23 @@ import (
 	"github.com/kiritosuki/fleetsim/internal/model"
 )
 
-// ListVehicles 条件筛选/获取车辆列表
-func ListVehicles(filters map[string]interface{}) ([]model.Vehicle, error) {
-	// 声明返回值类型切片
-	var vehicles []model.Vehicle
+// ListPois 筛选/获取poi列表
+func ListPois(filters map[string]interface{}) ([]model.Poi, error) {
+	// 声明返回类型的切片
+	var pois []model.Poi
 	// 获取数据库连接对象
-	DB := config.DB
-	db := DB.Model(&model.Vehicle{})
+	db := config.DB.Model(&model.Poi{})
 	// 动态添加查询条件
 	for k, v := range filters {
-		if k == "license" {
+		if k == "name" {
 			db = db.Where(k+" like ?", "%"+v.(string)+"%")
 		} else {
 			db = db.Where(k+" = ?", v)
 		}
 	}
-	err := db.Find(&vehicles).Error
+	err := db.Find(&pois).Error
 	if err != nil {
 		return nil, err
 	}
-	return vehicles, nil
+	return pois, nil
 }

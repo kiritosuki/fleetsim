@@ -12,8 +12,10 @@ type Vehicle struct {
 	Speed      float64   `json:"speed,omitempty"`
 	UpdateTime time.Time `json:"updateTime"`
 	CreateTime time.Time `json:"createTime"`
+	CategoryId int       `json:"categoryId"`
 }
 
+// TableName 关联数据库表 vehicle
 func (vehicle Vehicle) TableName() string {
 	return "vehicle"
 }

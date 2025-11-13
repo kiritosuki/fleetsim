@@ -4,6 +4,70 @@
         "contact": {}
     },
     "paths": {
+        "/pois": {
+            "get": {
+                "description": "根据条件筛选/获取poi列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Poi"
+                ],
+                "summary": "筛选/获取poi列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "poi名称",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "poi类型",
+                        "name": "tybe",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "状态",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/model.Poi"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
         "/vehicles": {
             "get": {
                 "description": "根据条件筛选/获取车辆列表",
@@ -28,6 +92,12 @@
                         "type": "integer",
                         "description": "状态",
                         "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "车辆类型",
+                        "name": "categoryId",
                         "in": "query"
                     }
                 ],
@@ -68,7 +138,7 @@
             "type": "object",
             "properties": {
                 "code": {
-                    "description": "1表示成功 0表示失败",
+                    "description": "1表示成功 2表示失败",
                     "type": "integer"
                 },
                 "data": {},
@@ -77,9 +147,35 @@
                 }
             }
         },
+        "model.Poi": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "tybe": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Vehicle": {
             "type": "object",
             "properties": {
+                "categoryId": {
+                    "type": "integer"
+                },
                 "createTime": {
                     "type": "string"
                 },
