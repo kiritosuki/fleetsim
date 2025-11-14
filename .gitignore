@@ -72,3 +72,6 @@ $RECYCLE.BIN/
 /build/
 /dist/
 /out/
+
+.env.prod
+.env.dev
