@@ -22,29 +22,32 @@ import (
 // @Router /pois [get]
 func ListPois(c *gin.Context) {
 	name := c.Query("name")
-	tybeStr := c.Query("tybe")
-	statusStr := c.Query("status")
+	tybe := c.Query("tybe")
+	status := c.Query("status")
 	// 构建查询条件
 	filters := make(map[string]interface{})
 	if name != "" {
 		filters["name"] = name
 	}
-	if tybeStr != "" {
-		tybe, err := strconv.Atoi(tybeStr)
-		if err != nil {
-			common.Error(c, "tybe 需为整数类型", err)
+
+	if tybe != "" {
+		if ty, err := strconv.Atoi(tybe); err != nil {
+			common.Error(c, "tybe 需要为整数类型", err)
 			return
+		} else {
+			filters["tybe"] = ty
 		}
-		filters["tybe"] = tybe
 	}
-	if statusStr != "" {
-		status, err := strconv.Atoi(statusStr)
-		if err != nil {
-			common.Error(c, "status 需为整数类型", err)
+
+	if status != "" {
+		if sta, err := strconv.Atoi(status); err != nil {
+			common.Error(c, "status 需要为整数类型", err)
 			return
+		} else {
+			filters["status"] = sta
 		}
-		filters["status"] = status
 	}
+
 	pois, err := service.ListPois(filters)
 	if err != nil {
 		common.Error(c, "ListPois() 筛选/获取poi列表失败", err)

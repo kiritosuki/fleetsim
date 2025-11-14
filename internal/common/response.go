@@ -23,6 +23,6 @@ func Success(c *gin.Context, data interface{}) {
 func Error(c *gin.Context, msg string, err error) {
 	c.JSON(http.StatusOK, Result{
 		Code:    2,
-		Message: msg + "--->" + err.Error(),
+		Message: msg + "--->\n" + err.Error(),
 	})
 }

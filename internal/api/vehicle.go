@@ -23,30 +23,30 @@ import (
 func ListVehicles(c *gin.Context) {
 	// 获取query参数
 	license := c.Query("license")
-	statusStr := c.Query("status")
-	categoryIdStr := c.Query("categoryId")
+	status := c.Query("status")
+	categoryId := c.Query("categoryId")
 	// 构造查询条件
 	filters := make(map[string]interface{})
-	if statusStr != "" {
-		status, err := strconv.Atoi(statusStr)
-		if err != nil {
-			common.Error(c, "status 类型需要为整数", err)
+	if status != "" {
+		if sta, err := strconv.Atoi(status); err != nil {
+			common.Error(c, "status 需要为整数类型", err)
 			return
+		} else {
+			filters["status"] = sta
 		}
-		filters["status"] = status
 	}
 
 	if license != "" {
 		filters["license"] = license
 	}
 
-	if categoryIdStr != "" {
-		categoryId, err := strconv.Atoi(categoryIdStr)
-		if err != nil {
-			common.Error(c, "categoryId 类型需为整数", err)
+	if categoryId != "" {
+		if catId, err := strconv.Atoi(categoryId); err != nil {
+			common.Error(c, "categoryId 需要为整数类型", err)
 			return
+		} else {
+			filters["category_id"] = catId
 		}
-		filters["category_id"] = categoryId
 	}
 
 	vehicles, err := service.ListVehicles(filters)
