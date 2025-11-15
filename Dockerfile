@@ -9,6 +9,8 @@ FROM golang:1.25-alpine AS builder
 ENV GOOS=linux
 ENV GOARCH=amd64
 ENV CGO_ENABLED=0
+ENV GOPROXY=https://goproxy.cn,direct
+ENV GOSUMDB=sum.golang.org
 
 # 3. 创建工作目录
 WORKDIR /app
