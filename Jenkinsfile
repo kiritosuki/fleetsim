@@ -16,6 +16,27 @@ pipeline {
             }
         }
 
+        stage("Debug Environment") {
+            steps {
+                sh """
+                echo "=== which docker ==="
+                which docker
+
+                echo "=== docker.sock perm ==="
+                ls -l /var/run/docker.sock || echo 'no docker.sock'
+
+                echo "=== docker info proxy ==="
+                docker info 2>/dev/null | grep -i proxy || echo 'no proxy in docker info'
+
+                echo "=== docker info full ==="
+                docker info || true
+
+                echo "=== systemctl show docker (jenkins) ==="
+                systemctl show docker | grep -i proxy || echo 'jenkins cannot see systemctl proxy'
+                """
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
