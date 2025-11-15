@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     // 构建镜像
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    sh "docker build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} ."
                 }
             }
         }
