@@ -3,7 +3,7 @@
 # =========================
 
 # 1. 指定镜像源 命名 builder 阶段
-FROM golang:1.25-alpine AS builder
+FROM golang:1.25 AS builder
 
 # 2. 指定编译环境 写入环境变量
 ENV GOOS=linux
@@ -27,7 +27,7 @@ RUN go build -o fleetsim-backend ./cmd/main.go
 # =========================
 
 # 1. 指定镜像源 命名 runtime 阶段
-FROM alpine:latest AS runtime
+FROM ubuntu:24.04 AS runtime
 
 # 2. 创建工作目录
 WORKDIR /app
