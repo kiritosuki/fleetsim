@@ -1,5 +1,7 @@
 # 忽略文档目录
-docs/
+docs/git分支管理.md
+docs/Gorm用法示例.md
+docs/swagger注释样例.md
 
 # 忽略 README 和 LICENSE 文件
 README*

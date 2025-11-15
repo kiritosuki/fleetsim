@@ -73,5 +73,6 @@ $RECYCLE.BIN/
 /dist/
 /out/
 
+# 配置环境变量的文件
 .env.dev
 .env.prod
