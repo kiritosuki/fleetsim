@@ -20,6 +20,7 @@ pipeline {
             steps {
                 script {
                     // 构建镜像
+                    sh "which docker && docker info"
                     sh "docker build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} ."
                 }
             }
