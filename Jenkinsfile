@@ -21,8 +21,11 @@ pipeline {
                 script {
                     // 构建镜像
                     // 在当前会话中禁用buildkit
-                    sh "export DOCKER_BUILDKIT=0"
-                    sh "docker build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    sh '''
+                        export DOCKER_BUILDKIT=0
+                        echo BuildKit disabled: $DOCKER_BUILDKIT
+                        docker build --network host -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                    '''
                 }
             }
         }
