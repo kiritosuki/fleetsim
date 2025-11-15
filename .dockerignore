@@ -1,0 +1,24 @@
+# 忽略文档目录
+docs/
+
+# 忽略 README 和 LICENSE 文件
+README*
+LICENSE
+
+# 忽略 git 版本控制文件
+.git
+.gitignore
+
+# 忽略本地 IDE 配置
+.vscode/
+.idea/
+*.swp
+
+# 忽略本地构建的二进制文件
+fleetsim-backend
+
+# 忽略脚本目录
+scripts/
+
+# 忽略 Mac 系统生成的文件
+.DS_Store

@@ -1,0 +1,19 @@
+services:
+  fleetsim-backend:
+    build:
+      context: .  # Dockerfile 所在目录
+      dockerfile: Dockerfile
+    container_name: fleetsim-backend
+    restart: unless-stopped
+    ports:
+      - "8088:8088"  # 宿主机:容器
+    environment:
+      # 这些环境变量要和你 Dockerfile/Go 项目里读取的一致
+      DB_USER:
+      DB_PASS:
+      DB_HOST:
+      DB_PORT:
+      DB_NAME:
+    volumes:
+    # 如果想挂载日志或者配置文件到宿主机可以写这里
+    # - ./logs:/app/logs
