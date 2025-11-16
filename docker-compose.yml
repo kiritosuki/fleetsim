@@ -6,7 +6,7 @@ services:
   fleetsim-backend:
     env_file:
       - .env.prod
-    image: ${IMAGE_NAME}:${IMAGE_TAG}
+    image: kirito693/fleetsim-backend:v0.1
     container_name: fleetsim-backend
     restart: unless-stopped
     ports:
