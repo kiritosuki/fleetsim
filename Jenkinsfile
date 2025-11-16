@@ -8,6 +8,10 @@ pipeline {
         IMAGE_TAG = "v0.1"
     }
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
         stage('Checkout') {
             steps {
