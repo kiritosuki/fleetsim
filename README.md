@@ -110,7 +110,6 @@ git clone https://github.com/kiritosuki/fleetsim.git
 
 - 创建名为`routing`的database
 - 执行`/scripts`下的数据库初始化脚本`routing.sql`
-- 修改`/config/config.go`中的数据库配置信息（详情见代码注释）
 
 ### 4. 安装依赖
 
@@ -118,7 +117,20 @@ git clone https://github.com/kiritosuki/fleetsim.git
 go mod tidy
 ```
 
-### 5. 启动服务
+### 5. 添加环境变量配置
+
+在项目根目录下新建`env.dev`文件，模版如下：
+
+```sh
+# 数据库配置 - 开发环境（根据个人情况修改）
+DB_USER=
+DB_PASSWORD=
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=routing
+```
+
+### 6. 启动服务
 
 ```go
 go run ./cmd/main.go
