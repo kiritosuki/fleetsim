@@ -6,13 +6,6 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'kirito-docker-hub'
         IMAGE_NAME = 'kirito693/fleetsim-backend'
         IMAGE_TAG = 'v0.1'
-
-        // 数据库环境变量，从 Jenkins Secret Text 注入
-        DB_USER = credentials('db_user')
-        DB_PASSWORD = credentials('db_password')
-        DB_HOST = credentials('db_host')
-        DB_PORT = credentials('db_port')
-        DB_NAME = credentials('db_name')
     }
 
     options {
@@ -58,46 +51,58 @@ pipeline {
 
         stage('Deploy Container') {
             steps {
-                script {
-                    // 读取环境变量配置并写入.env.prod文件
-                    sh """
-                    cat > .env.prod <<EOF
-                    DB_USER=${DB_USER}
-                    DB_PASSWORD=${DB_PASSWORD}
-                    DB_HOST=${DB_HOST}
-                    DB_PORT=${DB_PORT}
-                    DB_NAME=${DB_NAME}
-                    IMAGE_NAME=${IMAGE_NAME}
-                    IMAGE_TAG=${IMAGE_TAG}
-                    EOF
-                    """
+                // 使用 withCredentials 安全注入数据库 secret
+                withCredentials([
+                    string(credentialsId: 'db_user', variable: 'DB_USER'),
+                    string(credentialsId: 'db_password', variable: 'DB_PASSWORD'),
+                    string(credentialsId: 'db_host', variable: 'DB_HOST'),
+                    string(credentialsId: 'db_port', variable: 'DB_PORT'),
+                    string(credentialsId: 'db_name', variable: 'DB_NAME')
+                ]) {
+                    script {
+                        // 写入 .env.prod 文件
+                        sh """
+                            cat > .env.prod <<EOF
+DB_USER=$DB_USER
+DB_PASSWORD=$DB_PASSWORD
+DB_HOST=$DB_HOST
+DB_PORT=$DB_PORT
+DB_NAME=$DB_NAME
+IMAGE_NAME=${IMAGE_NAME}
+IMAGE_TAG=${IMAGE_TAG}
+EOF
+                        """
 
-                    sh '''
-                        NETWORK_NAME=fleetsim-net
-                        # 判断网络是否存在
-                        if ! docker network ls --format '{{.Name}}' | grep -w $NETWORK_NAME > /dev/null; then
-                            echo "创建 Docker 网络 $NETWORK_NAME"
-                            docker network create $NETWORK_NAME
-                        else
-                            echo "Docker 网络 $NETWORK_NAME 已存在"
-                        fi
-                    '''
+                        // 创建网络（如果不存在）
+                        sh '''
+                            NETWORK_NAME=fleetsim-net
+                            if ! docker network ls --format '{{.Name}}' | grep -w $NETWORK_NAME > /dev/null; then
+                                echo "创建 Docker 网络 $NETWORK_NAME"
+                                docker network create $NETWORK_NAME
+                            else
+                                echo "Docker 网络 $NETWORK_NAME 已存在"
+                            fi
+                        '''
 
-                    // 先停止并删除旧容器（如果存在）
-                    sh '''
-                        if [ $(docker ps -aq -f name=fleetsim-backend) ]; then
-                            docker stop fleetsim-backend
-                            docker rm fleetsim-backend
-                        fi
-                    '''
+                        // 停止并删除旧容器
+                        sh '''
+                            if [ $(docker ps -aq -f name=fleetsim-backend) ]; then
+                                docker stop fleetsim-backend
+                                docker rm fleetsim-backend
+                            fi
+                        '''
 
-                    // 启动新容器并注入数据库环境变量
-                    sh '''
-                        echo "更新镜像"
-                        docker compose pull
-                        echo "构建容器"
-                        docker compose up -d
-                    '''
+                        // 启动新容器，并安全注入环境变量
+                        sh '''
+                            echo "更新镜像"
+                            docker compose pull
+                            echo "构建容器"
+                            docker compose up -d
+                        '''
+
+                        // 可选：构建完成后删除 .env.prod 文件
+                        sh 'rm -f .env.prod'
+                    }
                 }
             }
         }
