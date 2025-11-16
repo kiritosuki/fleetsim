@@ -26,8 +26,8 @@ func main() {
 
 	// 设置信任的ip
 	// r.SetTrustedProxies(nil)
-	// 启动服务
-	err := r.Run("localhost:8088")
+	// 启动服务 (表示服务运行在8088端口 允许任意ip访问)
+	err := r.Run("0.0.0.0:8088")
 
 	if err != nil {
 		log.Fatalf("服务启动失败! %v", err)
